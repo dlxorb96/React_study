@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import './App.css';
+import React from 'react';
+import Donught from './Chart/Donught';
+
 
 function App() {
 
@@ -18,6 +21,7 @@ function App() {
 
   
   let [title, changeTitle] = useState(["남자 코트 추천", "외투", "바지"]);
+  let [inputValue , setInputValue] = useState("");
   
   // useState에는 ['남자 코트 추천', 함수] 남음
 
@@ -37,14 +41,6 @@ function App() {
 
   return (
     <div className="App">
-      {/* {title.map((e, i)=>{
-        return{
-          <div className='list'>
-            <h4>글 제목</h4>
-            <p>{e[i]}</p>
-          </div>    
-        }
-      })} */}
       <div className='header'>
         <h4>탄소중립HUB샘플</h4>
       </div>
@@ -63,6 +59,11 @@ function App() {
                 changeLikeCnt(arr)
                 }}>👍</span> {likeCnt[i]} 
               <p>{e}</p>
+              <button onClick={()=>{
+                const copy = [...title]
+                copy.splice(i, 1);
+                changeTitle(copy)
+              }}>글 삭제</button>
             </div>
           )
         })
@@ -97,10 +98,25 @@ function App() {
       }}>
         가나다순정렬
       </button>
+      <div>
+        <input onChange={(e)=>{
+          setInputValue(e.target.value)
+        }}></input>
+        <button onClick={()=>{
+          const copy = [...title];
+          copy.push(inputValue);
+          changeTitle(copy);
+        }}>
+          등록
+        </button>
+      </div>
+      
       {
         modal === true ? 
           <Modal title={title} changeTitle = {changeTitle} selectedTItle = {selectedTItle} /> : null
       }
+      <Modal2 />
+      <Donught width={"1000px"} height={"200px"}/>
     </div>
   );
 }
@@ -117,5 +133,26 @@ function Modal(props){
     </div>
   )
 }
- 
+
+class Modal2 extends React.Component{
+  constructor(props){
+    super(props);
+    this.state ={
+      name : "kim",
+      age: 20
+
+    }
+  }
+  render(){
+    return(
+      <div>
+        <div>안녕 {this.state.age}{this.state.name}</div>
+        <button onClick={()=>{
+          this.setState({age:21})
+        }}>클릭</button>
+      </div>
+    )
+  }
+}
+
 export default App;
