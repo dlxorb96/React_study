@@ -1,6 +1,7 @@
 // react , library
 import { useEffect, useState } from 'react';
 import { useNavigate, Route, Routes } from 'react-router-dom';
+import axios from 'axios';
 
 import styled from "styled-components";
 
@@ -33,7 +34,7 @@ function Content(props) {
     margin-left : 5px;
   `;
 
-  const data ={
+  const data = {
     labels: ['123', '4', '5', '6', '7', 'Orange'],
     datasets: [
       {
@@ -60,27 +61,83 @@ function Content(props) {
     ],
   };
 
+  let [isVisible, setIsVisible] = useState(true);
 
+  useEffect(() => {
+    // let a = setTimeout(() => {
+    //   console.log(1);
+    //   setIsVisible(!isVisible);
+    // }, 2000)
+
+    console.log(2)
+    // useEffect가 실행되기 전에 먼저 실행 됨.
+    // 보통 기존 타이머 제거하는 데 씀
+    // 기존 데이터 요청은 제거해줘
+    // mount 때는 실행되지 않고, unmount때는 실행됨
+    // unmout시 1회 코드 실행하고 싶으면 
+    // return () => {
+    //   console.log(3)
+    //   clearTimeout(a);
+    // }
+  }, [])
+
+  const HiddenDiv = styled.div`
+    display : ${isVisible === true ? "block" : "none"}
+  `;
+
+  function checkNumber(e) {
+
+    if (isNaN(Number(e.target.value))) {
+      setIsVisible(false)
+    }
+
+  }
+
+  let [axiosData, setAxiosData] = useState([]);
+
+  useState(()=>{
+    console.log(axiosData)
+  }, axiosData);
 
 
   return (
     <Container>
       <h2>차트모음</h2>
-      <MarginButton label="도넛차트" onClick={()=> navigate("/donught")}/>
-      <MarginButton label="라인차트" onClick={()=> navigate("/line")}/>
-      <MarginButton label="멀티타입차트1" onClick={()=> navigate("/mulitype1")}/>
-      <MarginButton label="스택차트" onClick={()=> navigate("/stack")}/>
-      <MarginButton label="파이차트" onClick={()=> navigate("/pie")}/>
-      <MarginButton label="혼합차트" onClick={()=> navigate("/mix")}/>
+      <MarginButton label="도넛차트" onClick={() => navigate("/donught")} />
+      <MarginButton label="라인차트" onClick={() => navigate("/line")} />
+      <MarginButton label="멀티타입차트1" onClick={() => navigate("/mulitype1")} />
+      <MarginButton label="스택차트" onClick={() => navigate("/stack")} />
+      <MarginButton label="파이차트" onClick={() => navigate("/pie")} />
+      <MarginButton label="혼합차트" onClick={() => navigate("/mix")} />
       <Routes>
-        <Route path="/donught" element={ <DonughtChart data={data} width={"400px"} height={"200px"}/>}></Route>
-        <Route path="/line" element={ <LineChart title={"라인차트임"} width={"400px"} height={"200px"} />}></Route>
-        <Route path="/mulitype1" element={ <MultitypeChart1 />}></Route>
-        <Route path="/donught" element={ <DonughtChart />}></Route>
-        <Route path="/donught" element={ <DonughtChart />}></Route>
-        <Route path="/donught" element={ <DonughtChart />}></Route>
+        <Route path="/donught" element={<DonughtChart data={data} width={"400px"} height={"200px"} />}></Route>
+        <Route path="/line" element={<LineChart title={"라인차트임"} width={"400px"} height={"200px"} />}></Route>
+        <Route path="/mulitype1" element={<MultitypeChart1 />}></Route>
+        <Route path="/donught" element={<DonughtChart />}></Route>
+        <Route path="/donught" element={<DonughtChart />}></Route>
+        <Route path="/donught" element={<DonughtChart />}></Route>
       </Routes>
-      
+      <HiddenDiv>
+        <input onInput={(e) => { checkNumber(e) }}></input>
+      </HiddenDiv>
+      <button onClick={() => {
+        axios.get('https://codingapple1.github.io/shop/data2.json')
+          .then((res) => {
+            console.log(res.data);
+            setAxiosData(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      }}>버튼</button>
+      {axiosData.map((item, index) => {
+        return (
+          <div key={index}>
+            {item.title}
+          </div>
+        )
+      })
+      }
     </Container>
   )
 }
