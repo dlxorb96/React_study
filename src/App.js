@@ -18,11 +18,10 @@ function App() {
     display : flex;
     height : 100%
   `;
-
-
-
+  
   return (
-    <BrowserRouter>
+    
+    <BrowserRouter>  {/* 라우터 사용을 위해 */}
       <div style={{ height: "100vh" }}>
         <Header></Header>
         <MainContainer>
@@ -35,3 +34,4 @@ function App() {
 }
 
 export default App;
+ 
